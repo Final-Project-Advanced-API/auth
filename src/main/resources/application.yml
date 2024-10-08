@@ -1,0 +1,49 @@
+server:
+  port: 9090
+
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: example
+      database: user_db
+      port: 27018
+      host: localhost
+      auto-index-creation: true
+  application:
+    name: authentication-with-keycloak
+  mail:
+    host: smtp.gmail.com
+    username: bugzapper.hrd@gmail.com
+    password: dbblamycivtocqki
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+      mail.debug: true
+  #Resource server configuration
+  security:
+    oauth2:
+      resource server:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/user
+          jwk-set-uri: http://localhost:8080/realms/user/protocol/openid-connect/certs
+#          jwk-set-uri: http://localhost:8080/realms/myauth/protocol/openid-connect/certs
+# Keycloak configuration
+keycloak:
+  realm: user
+  resource: user-client
+  auth-server-url: http://localhost:8080/
+  credentials:
+    secret: WpHwwOV5YX1pV0mcDOPjjToFwq69s0qw
+    client-id: user-client
+    provider: secret
+# Swagger configuration
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: user-client
+      client-secret: WpHwwOV5YX1pV0mcDOPjjToFwq69s0qw
+      realm: user
+    tags-sorter: alpha
