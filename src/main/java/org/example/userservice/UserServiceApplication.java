@@ -14,6 +14,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
         flows = @OAuthFlows(
                 clientCredentials = @OAuthFlow(
                         tokenUrl = "http://localhost:8080/realms/user/protocol/openid-connect/token"
+                ),
+                password = @OAuthFlow(
+                        tokenUrl = "http://localhost:8080/realms/user/protocol/openid-connect/token"
                 )
         )
 )

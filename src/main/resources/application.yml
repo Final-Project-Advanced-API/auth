@@ -15,6 +15,7 @@ spring:
     name: authentication-with-keycloak
   mail:
     host: smtp.gmail.com
+    port: 587
     username: bugzapper.hrd@gmail.com
     password: dbblamycivtocqki
     properties:
@@ -36,7 +37,7 @@ keycloak:
   resource: user-client
   auth-server-url: http://localhost:8080/
   credentials:
-    secret: WpHwwOV5YX1pV0mcDOPjjToFwq69s0qw
+    secret: N81JK1E1Pfx2cA6jkVJP4JLfqeHU5ADj
     client-id: user-client
     provider: secret
 # Swagger configuration
@@ -44,6 +45,6 @@ springdoc:
   swagger-ui:
     oauth:
       client-id: user-client
-      client-secret: WpHwwOV5YX1pV0mcDOPjjToFwq69s0qw
+      client-secret: N81JK1E1Pfx2cA6jkVJP4JLfqeHU5ADj
       realm: user
     tags-sorter: alpha
