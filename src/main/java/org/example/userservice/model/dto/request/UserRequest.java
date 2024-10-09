@@ -14,7 +14,7 @@ import lombok.*;
 public class UserRequest {
     @NotNull
     @NotBlank
-    private String username;
+    private String userName;
 
     @NotNull
     @NotBlank
@@ -41,6 +41,10 @@ public class UserRequest {
             message = "Password must be at least 8 characters long and include both letters and numbers"
     )
     private String password;
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$",
+            message = "Password must be at least 8 characters long and include both letters and numbers"
+    )
+    private String confirmPassword;
     private String profile;
 
 

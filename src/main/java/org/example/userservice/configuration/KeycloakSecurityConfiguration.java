@@ -11,7 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
-
 @Configuration
 @AllArgsConstructor
 public class KeycloakSecurityConfiguration {
@@ -22,7 +21,7 @@ public class KeycloakSecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.cors(Customizer.withDefaults()).csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("api/v1/authentication/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html","api/v1/authentication/register").permitAll();
+                    auth.requestMatchers("/api/v1/authentication/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session

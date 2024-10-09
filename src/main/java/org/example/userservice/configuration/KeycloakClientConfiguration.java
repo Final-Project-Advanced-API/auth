@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.keycloak.OAuth2Constants.CLIENT_CREDENTIALS;
+
 @Configuration
 public class KeycloakClientConfiguration {
 
