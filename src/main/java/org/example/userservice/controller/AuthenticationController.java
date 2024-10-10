@@ -52,6 +52,29 @@ public class AuthenticationController {
                 .build();
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/resendOtp")
+    @Operation(summary = "resent otp")
+    public ResponseEntity<?> resendOtp(@RequestParam String email, @RequestParam(defaultValue = "false") Boolean type) throws MessagingException {
+        authenticationService.resend(email, type);
+        APIResponse<?> response = APIResponse.builder()
+               .message("Otp has been sent successfully.")
+               .status(HttpStatus.OK)
+               .time(LocalDateTime.now())
+               .build();
+        return ResponseEntity.ok(response);
+    }
+    @PutMapping("/forget")
+    @Operation(summary = "Forgot password")
+    public ResponseEntity<?> forget(@RequestParam @Email String email, @Valid @RequestBody PasswordRequest passwordRequest) {
+        authenticationService.forget(email, passwordRequest);
+        APIResponse<?> response = APIResponse.builder()
+               .message("Your password is reset successful")
+                .payload(null)
+               .status(HttpStatus.OK)
+               .time(LocalDateTime.now())
+               .build();
+        return ResponseEntity.ok(response);
+    }
 //
 //    @PutMapping("/verify")
 //    @Operation(summary = "verify otp")

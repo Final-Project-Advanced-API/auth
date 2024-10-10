@@ -4,6 +4,7 @@ import jakarta.ws.rs.core.Response;
 import org.example.userservice.exception.BadRequestException;
 import org.example.userservice.exception.ConflictException;
 import org.example.userservice.exception.NotFoundException;
+import org.example.userservice.model.dto.request.PasswordRequest;
 import org.example.userservice.model.dto.request.UserRequest;
 import org.example.userservice.model.entity.AppUser;
 import org.example.userservice.model.response.UserResponse;
@@ -48,7 +49,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new ConflictException("This email is already registered");
         }
         UserRepresentation userRepresentation = userResource.get(CreatedResponseUtil.getCreatedId(response)).toRepresentation();
-        emailService.sendMail(userRequest.getEmail() ,userRepresentation.getAttributes().get("otpCode").getFirst());
+        emailService.sendMail(userRequest.getEmail(), userRepresentation.getAttributes().get("otpCode").getFirst());
         UserResponse user = modelMapper.map(userRepresentation, UserResponse.class);
         System.out.println(user);
         user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
@@ -59,39 +60,88 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setUpdateAt(userRepresentation.getAttributes().get("updateAt").getFirst());
         return user;
     }
-@Override
-public void verify(String email, String otpCode, Boolean type) {
-    Optional<UserRepresentation> userRepresentationOpt = getUserByEmail(email);
-    UsersResource userResource = keycloak.realm(realm).users();
 
-    if (userRepresentationOpt.isPresent()) {
-        UserRepresentation userRepresentation = userRepresentationOpt.get();
-        if (userRepresentation.isEnabled()) {
-            throw new BadRequestException("Your account is already verified");
-        }
-        String storedOtpCode = userRepresentation.firstAttribute("otpCode");
-        if (storedOtpCode == null || !storedOtpCode.equals(otpCode)) {
-            throw new BadRequestException("Invalid OTP");
-        }
-        String expirationString = userRepresentation.firstAttribute("expiredAt");
-        if (expirationString == null) {
-            throw new BadRequestException("Expiration time is missing");
-        }
-        LocalDateTime expiration = LocalDateTime.parse(expirationString);
-        if (!expiration.isAfter(LocalDateTime.now())) {
-            throw new BadRequestException("Your OTP has expired");
-        }
-        AppUser user = modelMapper.map(userRepresentation, AppUser.class);
-        if (!type) {
-            userRepresentation.setEnabled(true);
+    @Override
+    public void verify(String email, String otpCode, Boolean type) {
+        Optional<UserRepresentation> userRepresentationOpt = getUserByEmail(email);
+        UsersResource userResource = keycloak.realm(realm).users();
+
+        if (userRepresentationOpt.isPresent()) {
+            UserRepresentation userRepresentation = userRepresentationOpt.get();
+            if (userRepresentation.isEnabled()) {
+                throw new BadRequestException("Your account is already verified");
+            }
+            String storedOtpCode = userRepresentation.firstAttribute("otpCode");
+            if (storedOtpCode == null || !storedOtpCode.equals(otpCode)) {
+                throw new BadRequestException("Invalid OTP");
+            }
+            String expirationString = userRepresentation.firstAttribute("expiredAt");
+            if (expirationString == null) {
+                throw new BadRequestException("Expiration time is missing");
+            }
+            LocalDateTime expiration = LocalDateTime.parse(expirationString);
+            if (!expiration.isAfter(LocalDateTime.now())) {
+                throw new BadRequestException("Your OTP has expired");
+            }
+            AppUser user = modelMapper.map(userRepresentation, AppUser.class);
+            if (!type) {
+                userRepresentation.setEnabled(true);
+            } else {
+                userRepresentation.singleAttribute("isForgot", String.valueOf(true));
+            }
+            userResource.get(user.getUserId()).update(userRepresentation);
         } else {
-            userRepresentation.singleAttribute("isForgot", String.valueOf(true));
+            throw new BadRequestException("User not found");
         }
-        userResource.get(user.getUserId()).update(userRepresentation);
-    } else {
-        throw new BadRequestException("User not found");
     }
+
+    @Override
+    public void resend(String email, Boolean type) throws MessagingException {
+        Optional<UserRepresentation> userRepresentationOpt = getUserByEmail(email);
+        UsersResource userResource = keycloak.realm(realm).users();
+        if (userRepresentationOpt.isPresent()) {
+            UserRepresentation userRepresentation = userRepresentationOpt.get();
+            LocalDateTime expiration = LocalDateTime.parse(userRepresentation.firstAttribute("expiredAt"));
+            if (!expiration.isBefore(LocalDateTime.now())) {
+                throw new BadRequestException("Your OTP has not expired yet");
+            }
+            String newOtp = generateOTP();
+            userRepresentation.singleAttribute("otpCode", newOtp);
+            userRepresentation.singleAttribute("issuedAt", String.valueOf(LocalDateTime.now()));
+            userRepresentation.singleAttribute("expiredAt", String.valueOf(LocalDateTime.now().plusMinutes(1L)));
+            if (!type) {
+                userRepresentation.setEnabled(false);
+            } else {
+                userRepresentation.singleAttribute("isForgot", String.valueOf(false));
+            }
+            AppUser user = modelMapper.map(userRepresentation, AppUser.class);
+            userResource.get(user.getUserId()).update(userRepresentation);
+            emailService.sendMail(email, newOtp);
+        } else {
+            throw new BadRequestException("User not found");
+        }
 }
+
+    @Override
+    public void forget(String email, PasswordRequest passwordRequest) {
+        Optional<UserRepresentation> userRepresentation = getUserByEmail(email);
+        if (!passwordRequest.getConfirmPassword().equals(passwordRequest.getPassword())) {
+            throw new BadRequestException("Your confirm password does not match with your password");
+        }
+        if (userRepresentation.isPresent()) {
+            boolean isForgot = Boolean.parseBoolean(userRepresentation.get().firstAttribute("isForgot"));
+            if (!isForgot) {
+                throw new BadRequestException("Please verify your account before forgetting your password");
+            }
+            UsersResource userResource = keycloak.realm(realm).users();
+            AppUser user = modelMapper.map(userRepresentation, AppUser.class);
+            userRepresentation.ifPresent(representation -> {
+                userRepresentation.get().singleAttribute("isForgot", String.valueOf(false));
+                representation.setCredentials(Collections.singletonList(preparePasswordRepresentation(passwordRequest.getPassword())));
+                userResource.get(user.getUserId()).update(representation);
+            });
+        }
+    }
 
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) throws MessagingException {
         UserRepresentation userRepresentation = new UserRepresentation();
@@ -105,7 +155,7 @@ public void verify(String email, String otpCode, Boolean type) {
         userRepresentation.singleAttribute("createdAt", String.valueOf(LocalDateTime.now()));
         userRepresentation.singleAttribute("updateAt", String.valueOf(LocalDateTime.now()));
         userRepresentation.singleAttribute("issuedAt", String.valueOf(LocalDateTime.now()));
-        userRepresentation.singleAttribute("expiredAt", String.valueOf(LocalDateTime.now().plusMinutes(2L)));
+        userRepresentation.singleAttribute("expiredAt", String.valueOf(LocalDateTime.now().plusMinutes(1L)));
         String otp = generateOTP();
         userRepresentation.singleAttribute("otpCode", otp);
         userRepresentation.setCredentials(Collections.singletonList(credentialRepresentation));
