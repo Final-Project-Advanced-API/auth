@@ -1,7 +1,8 @@
 server:
   port: 9090
-
 spring:
+  application:
+    name: user-service
   data:
     mongodb:
       authentication-database: admin
@@ -11,8 +12,6 @@ spring:
       port: 27018
       host: localhost
       auto-index-creation: true
-  application:
-    name: authentication-with-keycloak
   mail:
     host: smtp.gmail.com
     port: 587
@@ -21,8 +20,6 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-      mail.smtp.starttls.required: true
-      mail.debug: true
   #Resource server configuration
   security:
     oauth2:
