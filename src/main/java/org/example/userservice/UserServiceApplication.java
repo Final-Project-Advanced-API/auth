@@ -9,14 +9,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @SecurityScheme(
-        name = "user",
+        name = "stack-note",
         type = SecuritySchemeType.OAUTH2,
         flows = @OAuthFlows(
                 clientCredentials = @OAuthFlow(
-                        tokenUrl = "http://localhost:8080/realms/user/protocol/openid-connect/token"
+                        tokenUrl = "https://keycloak.manin.lol/realms/stack-note/protocol/openid-connect/token"
                 ),
                 password = @OAuthFlow(
-                        tokenUrl = "http://localhost:8080/realms/user/protocol/openid-connect/token"
+                        tokenUrl = "https://keycloak.manin.lol/realms/stack-note/protocol/openid-connect/token"
                 )
         )
 )

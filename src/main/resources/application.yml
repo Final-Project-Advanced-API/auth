@@ -28,23 +28,23 @@ spring:
     oauth2:
       resource server:
         jwt:
-          issuer-uri: http://localhost:8080/realms/user
-          jwk-set-uri: http://localhost:8080/realms/user/protocol/openid-connect/certs
+          issuer-uri: https://keycloak.manin.lol/realms/stack-note
+#          jwk-set-uri: http://localhost:8080/realms/user/protocol/openid-connect/certs
 #          jwk-set-uri: http://localhost:8080/realms/myauth/protocol/openid-connect/certs
 # Keycloak configuration
 keycloak:
-  realm: user
-  resource: user-client
-  auth-server-url: http://localhost:8080/
+  realm: stack-note
+  resource: stack-note-client
+  auth-server-url: https://keycloak.manin.lol/
   credentials:
-    secret: cEZzxdzJXYpr8QGf97hyh9zTJTzulW5O
-    client-id: user-client
+    secret: bRG4XwimHwS8q5kKpyJR2IuXeunW4axw
+    client-id: stack-note-client
     provider: secret
 # Swagger configuration
 springdoc:
   swagger-ui:
     oauth:
-      client-id: user-client
-      client-secret: cEZzxdzJXYpr8QGf97hyh9zTJTzulW5O
-      realm: user
+      client-id: stack-note-client
+      client-secret: bRG4XwimHwS8q5kKpyJR2IuXeunW4axw
+      realm: stack-note
     tags-sorter: alpha

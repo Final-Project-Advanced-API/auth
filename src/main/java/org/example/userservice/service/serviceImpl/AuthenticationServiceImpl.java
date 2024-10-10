@@ -51,7 +51,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         UserRepresentation userRepresentation = userResource.get(CreatedResponseUtil.getCreatedId(response)).toRepresentation();
         emailService.sendMail(userRequest.getEmail(), userRepresentation.getAttributes().get("otpCode").getFirst());
         UserResponse user = modelMapper.map(userRepresentation, UserResponse.class);
-        System.out.println(user);
         user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
         user.setFullName(userRepresentation.getAttributes().get("fullName").getFirst());
         user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
@@ -68,9 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         if (userRepresentationOpt.isPresent()) {
             UserRepresentation userRepresentation = userRepresentationOpt.get();
-            if (userRepresentation.isEnabled()) {
-                throw new BadRequestException("Your account is already verified");
-            }
+
             String storedOtpCode = userRepresentation.firstAttribute("otpCode");
             if (storedOtpCode == null || !storedOtpCode.equals(otpCode)) {
                 throw new BadRequestException("Invalid OTP");
@@ -85,6 +82,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             }
             AppUser user = modelMapper.map(userRepresentation, AppUser.class);
             if (!type) {
+                if (userRepresentation.isEnabled()) {
+                    throw new BadRequestException("Your account is already verified");
+                }
                 userRepresentation.setEnabled(true);
             } else {
                 userRepresentation.singleAttribute("isForgot", String.valueOf(true));
