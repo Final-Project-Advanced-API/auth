@@ -61,25 +61,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 @Override
 public void verify(String email, String otpCode, Boolean type) {
-    Optional<UserRepresentation> userRepresentation = getUserByEmail(email);
-    System.out.println("email"+getUserByEmail(email));
+    Optional<UserRepresentation> userRepresentationOpt = getUserByEmail(email);
     UsersResource userResource = keycloak.realm(realm).users();
-    if (userRepresentation.isPresent()) {
-        LocalDateTime expiration = LocalDateTime.parse(userRepresentation.get().firstAttribute("expiredAt"));
+
+    if (userRepresentationOpt.isPresent()) {
+        UserRepresentation userRepresentation = userRepresentationOpt.get();
+        if (userRepresentation.isEnabled()) {
+            throw new BadRequestException("Your account is already verified");
+        }
+        String storedOtpCode = userRepresentation.firstAttribute("otpCode");
+        if (storedOtpCode == null || !storedOtpCode.equals(otpCode)) {
+            throw new BadRequestException("Invalid OTP");
+        }
+        String expirationString = userRepresentation.firstAttribute("expiredAt");
+        if (expirationString == null) {
+            throw new BadRequestException("Expiration time is missing");
+        }
+        LocalDateTime expiration = LocalDateTime.parse(expirationString);
         if (!expiration.isAfter(LocalDateTime.now())) {
-            throw new BadRequestException("Your otp is expire");
+            throw new BadRequestException("Your OTP has expired");
         }
         AppUser user = modelMapper.map(userRepresentation, AppUser.class);
         if (!type) {
-            userRepresentation.get().setEnabled(true);
+            userRepresentation.setEnabled(true);
         } else {
-            userRepresentation.get().singleAttribute("isForgot", String.valueOf(true));
+            userRepresentation.singleAttribute("isForgot", String.valueOf(true));
         }
-        userResource.get(user.getUserId()).update(userRepresentation.get());
+        userResource.get(user.getUserId()).update(userRepresentation);
+    } else {
+        throw new BadRequestException("User not found");
     }
-
 }
-
 
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) throws MessagingException {
         UserRepresentation userRepresentation = new UserRepresentation();

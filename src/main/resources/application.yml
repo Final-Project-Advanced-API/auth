@@ -37,7 +37,7 @@ keycloak:
   resource: user-client
   auth-server-url: http://localhost:8080/
   credentials:
-    secret: sAn3TIWZSwAIa3JzLk4aN8bOJnOo44yC
+    secret: cEZzxdzJXYpr8QGf97hyh9zTJTzulW5O
     client-id: user-client
     provider: secret
 # Swagger configuration
@@ -45,6 +45,6 @@ springdoc:
   swagger-ui:
     oauth:
       client-id: user-client
-      client-secret: sAn3TIWZSwAIa3JzLk4aN8bOJnOo44yC
+      client-secret: cEZzxdzJXYpr8QGf97hyh9zTJTzulW5O
       realm: user
     tags-sorter: alpha
