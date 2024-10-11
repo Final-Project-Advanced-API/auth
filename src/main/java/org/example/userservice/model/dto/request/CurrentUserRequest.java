@@ -14,10 +14,6 @@ import lombok.*;
 public class CurrentUserRequest {
     @NotNull
     @NotBlank
-    private String userName;
-
-    @NotNull
-    @NotBlank
     private String fullName;
 
     @NotNull
@@ -30,10 +26,6 @@ public class CurrentUserRequest {
             message = "Date of Birth must be in the format YYYY-MM-DD")
     private String dob;
 
-    @NotNull
-    @NotBlank
-    @Email
-    private String email;
     @NotNull
     @NotBlank
     private String profile;

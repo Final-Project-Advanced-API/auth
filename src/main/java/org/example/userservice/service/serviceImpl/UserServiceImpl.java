@@ -73,8 +73,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateCurrentUser(String id, CurrentUserRequest userRequest) {
          UserRepresentation userRepresentation = keycloak.realm(realm).users().get(id).toRepresentation();
-         userRepresentation.setUsername(userRequest.getUserName());
-         userRepresentation.setEmail(userRequest.getEmail());
          userRepresentation.singleAttribute("fullName",userRequest.getFullName());
          userRepresentation.singleAttribute("dob", userRequest.getDob());
          userRepresentation.singleAttribute("gender",userRequest.getGender());

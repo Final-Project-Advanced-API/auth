@@ -2,7 +2,6 @@ package org.example.userservice.model.entity;
 
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
 
 import java.time.LocalDateTime;
 
