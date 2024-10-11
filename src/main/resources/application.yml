@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: 8081
 spring:
   application:
     name: user-service
@@ -36,7 +36,7 @@ springdoc:
       client-secret: bRG4XwimHwS8q5kKpyJR2IuXeunW4axw
       realm: stack-note
     tags-sorter: alpha
-
+# Eureka configuration
 eureka:
   client:
     service-url:

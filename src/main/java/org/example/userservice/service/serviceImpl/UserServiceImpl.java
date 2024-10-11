@@ -80,9 +80,7 @@ public class UserServiceImpl implements UserService {
          UsersResource usersResource = keycloak.realm(realm).users();
          usersResource.get(id).update(userRepresentation);
          return getUser(userRepresentation);
-
     }
-
     private UserResponse getUser(UserRepresentation userRepresentation) {
         UserResponse user = modelMapper.map(userRepresentation, UserResponse.class);
         user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
