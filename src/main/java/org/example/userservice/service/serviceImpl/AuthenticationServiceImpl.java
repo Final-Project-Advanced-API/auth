@@ -54,6 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
         user.setFullName(userRepresentation.getAttributes().get("fullName").getFirst());
         user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
+        user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
         user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
         user.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
         user.setUpdateAt(userRepresentation.getAttributes().get("updateAt").getFirst());
@@ -149,6 +150,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepresentation.singleAttribute("gender", userRequest.getGender());
         userRepresentation.singleAttribute("dob", userRequest.getDob());
         userRepresentation.singleAttribute("fullName", userRequest.getFullName());
+        userRepresentation.singleAttribute("bio", userRequest.getBio());
         userRepresentation.setEmail(userRequest.getEmail());
         userRepresentation.singleAttribute("isForgot", String.valueOf(false));
         userRepresentation.singleAttribute("profile",userRequest.getProfile());

@@ -14,6 +14,7 @@ public class AppUser {
     private String userId;
     private String username;
     private String fullName;
+    private String bio;
     private String gender;
     private String dob;
     private String email;

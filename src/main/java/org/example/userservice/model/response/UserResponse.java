@@ -20,6 +20,7 @@ public class UserResponse {
     private String createdAt;
     private String updateAt;
     private String profile;
+    private String bio;
 
 
 

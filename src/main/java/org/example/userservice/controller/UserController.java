@@ -6,8 +6,6 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.userservice.model.dto.request.CurrentUserRequest;
 import org.example.userservice.model.dto.request.PasswordRequest;
-import org.example.userservice.model.dto.request.UpdatePasswordRequest;
-import org.example.userservice.model.dto.request.UserRequest;
 import org.example.userservice.model.response.UserResponse;
 import org.example.userservice.service.UserService;
 import org.example.userservice.util.APIResponse;
@@ -22,7 +20,7 @@ import java.util.UUID;
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/v1/users")
-@SecurityRequirement(name = "stack-note")
+@SecurityRequirement(name = "stack-notes")
 public class UserController {
     private final UserService userService;
 
@@ -32,6 +30,7 @@ public class UserController {
         UserResponse user = userService.getCurrentUser(principal.getName());
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .message("Get current user successfully.")
+                .code(200)
                 .payload(user)
                 .status(HttpStatus.OK)
                 .time(LocalDateTime.now())
@@ -44,6 +43,7 @@ public class UserController {
         UserResponse user = userService.getUserByEmail(email);
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .message("Get user by id successfully.")
+                .code(200)
                 .payload(user)
                 .status(HttpStatus.OK)
                 .time(LocalDateTime.now())
@@ -56,6 +56,7 @@ public class UserController {
         UserResponse user = userService.getUserById(userId);
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .message("Get user by id successfully.")
+                .code(200)
                 .payload(user)
                 .status(HttpStatus.OK)
                 .time(LocalDateTime.now())
@@ -68,6 +69,7 @@ public class UserController {
         userService.changePassword(principal.getName(),passwordRequest);
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .message("Change password current user successfully.")
+                .code(200)
                 .payload(null)
                 .status(HttpStatus.OK)
                 .time(LocalDateTime.now())
@@ -80,6 +82,7 @@ public class UserController {
         UserResponse user = userService.updateCurrentUser(principal.getName(), userRequest);
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .message("Update current user successfully.")
+                .code(200)
                 .payload(user)
                 .status(HttpStatus.OK)
                 .time(LocalDateTime.now())

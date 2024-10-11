@@ -20,6 +20,7 @@ public class UserRequest {
     @NotBlank
     private String fullName;
 
+
     @NotNull
     @NotBlank
     private String gender;
@@ -45,7 +46,12 @@ public class UserRequest {
             message = "Password must be at least 8 characters long and include both letters and numbers"
     )
     private String confirmPassword;
+    @NotNull
+    @NotBlank
     private String profile;
+    @NotNull
+    @NotBlank
+    private String bio;
 
 
 

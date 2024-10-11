@@ -29,4 +29,7 @@ public class CurrentUserRequest {
     @NotNull
     @NotBlank
     private String profile;
+    @NotNull
+    @NotBlank
+    private String bio;
 }

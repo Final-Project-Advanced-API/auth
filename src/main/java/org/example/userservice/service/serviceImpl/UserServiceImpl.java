@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
          userRepresentation.singleAttribute("dob", userRequest.getDob());
          userRepresentation.singleAttribute("gender",userRequest.getGender());
          userRepresentation.singleAttribute("profile",userRequest.getProfile());
+         userRepresentation.singleAttribute("bio",userRequest.getBio());
          UsersResource usersResource = keycloak.realm(realm).users();
          usersResource.get(id).update(userRepresentation);
          return getUser(userRepresentation);
@@ -86,6 +87,7 @@ public class UserServiceImpl implements UserService {
         user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
         user.setFullName(userRepresentation.getAttributes().get("fullName").getFirst());
         user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
+        user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
         user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
         user.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
         user.setUpdateAt(userRepresentation.getAttributes().get("updateAt").getFirst());
