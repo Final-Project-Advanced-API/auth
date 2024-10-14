@@ -3,7 +3,7 @@ pipeline {
     environment {
         IMAGE = "soklay515/auth-service"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
-        DOCKER_HUB_CREDENTIAL = "dockerhub-token"
+        DOCKER_HUB_CREDENTIAL = "Stacknote"
         MANIFEST_REPO = "manifest-repo"
         GIT_MANIFEST_REPO = "https://github.com/12-Generation-Advanced-Course-Project/Stacknote-Auth-Service.git"
         GIT_CREDENTIALS_ID = "git-token"
