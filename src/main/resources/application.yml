@@ -1,5 +1,5 @@
 server:
-  port: 9098
+  port: 8081
 spring:
   application:
     name: user-service
@@ -37,9 +37,9 @@ springdoc:
       realm: stack-notes
     tags-sorter: alpha
 # Eureka configuration
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8761/eureka
-#    register-with-eureka: true
-#    fetch-registry: true
+eureka:
+  client:
+    service-url:
+      defaultZone: https://eureka.jelay.site/eureka
+    register-with-eureka: true
+    fetch-registry: true
