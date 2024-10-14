@@ -1,97 +1,117 @@
 pipeline {
     agent any
+
     environment {
         IMAGE = "soklay515/auth-service"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
-        DOCKER_HUB_CREDENTIAL = "Stacknote"
-        MANIFEST_REPO = "manifest-repo"
-        GIT_MANIFEST_REPO = "https://github.com/12-Generation-Advanced-Course-Project/Stacknote-Auth-Service.git"
-        GIT_CREDENTIALS_ID = "git-token"
+        DOCKER_CREDENTIALS_ID = 'dockerhub-token'
+        GIT_MANIFEST_REPO = "github.com/12-Generation-Advanced-Course-Project/Stacknote-Manifest.git"
+        GIT_BRANCH = "user-service"
+        MANIFEST_REPO = "Stacknote-Manifest" 
         MANIFEST_FILE_PATH = "manifest/deployment.yaml"
+        GIT_CREDENTIALS_ID = 'Stacknote'
     }
+
     stages {
 
-        stage("cleanup") {
+        stage("checkout") {
             steps {
-                // sh " mvn clean install"
-                // sh " docker image prune -a "
-                echo "hello jenkins"
-            }
+            echo "🚀🚀🚀🚀 Running..."
+            echo "Running on $NODE_NAME"
+            echo "$BUILD_NUMBER"
+            sh ' docker image prune --all '
+            sh 'pwd'
+            sh 'ls'
+          }
         }
 
-        stage ("build") {
-            steps {
-                echo "Hello world !!"
-                sh " docker build -t ${DOCKER_IMAGE} ."
-                sh " docker images | grep -i ${IMAGE} "
-            }
-        }
 
-        stage ("push image to docker hub") {
+        stage("build and push docker image") {
+
             steps {
                 script {
-                     withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIAL, passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
+                    echo "🚀 Building docker image..."
+                    sh ' docker build -t ${DOCKER_IMAGE} .'
+                    sh ' docker images | grep -i ${IMAGE} '
+                    
+                    echo "🚀 Log in Docker hub using Jenkins credentials..."
+                    withCredentials([usernamePassword(credentialsId: DOCKER_CREDENTIALS_ID, passwordVariable: 'DOCKER_PASS', usernameVariable: 'DOCKER_USER')]) {
                       sh 'echo "${DOCKER_PASS} ${DOCKER_USER}" '
                       sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
                     }
                     echo "🚀 Pushing the image to Docker hub"
                     sh 'docker push ${DOCKER_IMAGE}'
+                    
                 }
-               
             }
         }
 
-        stage ("clone manifest file") {
-             steps {
-                    sh "pwd"
-                    sh "ls -l"
-                    sh '''
-                    if [ -d "${MANIFEST_REPO}" ]; then
-                        echo "🚀 ${MANIFEST_REPO} exists, removing it..."
-                        rm -rf ${MANIFEST_REPO}
-                    fi
-                    '''
-                    echo "🚀 Updating the image of the Manifest file..."
-                    sh "git clone -b main ${GIT_MANIFEST_REPO} ${MANIFEST_REPO}"
-                    sh "ls -l"
-             }
-        }
-        
-        stage("Updating the manifest file") {
+        stage("Cloning the manifest file") {
             steps {
-                script {
-                    echo "🚀 Update the image in the deployment manifest..."
-                    sh """
-                    sed -i 's|image: soklay515/auth-service.*|image: ${DOCKER_IMAGE}|' ${MANIFEST_REPO}/${MANIFEST_FILE_PATH}
-                    """
-                }
+                 script {
+                    dir("${MANIFEST_REPO}") {
+                        withCredentials([usernamePassword(credentialsId: 'Stacknote', passwordVariable: 'GIT_PASS', usernameVariable: 'GIT_USER')]) {
+                        sh "pwd"
+                        sh "ls -l"
+                        echo "🚀 Checking if the manifest repository exists and removing it if necessary..."
+                        sh '''
+                            if [ -d "${MANIFEST_REPO}" ]; then
+                                echo "🚀 ${MANIFEST_REPO} exists, removing it..."
+                                rm -rf ${MANIFEST_REPO}
+                            fi
+                        '''
+                        echo "🚀 Updating the image of the Manifest file..."
+                        sh "git clone -b ${GIT_BRANCH} https://${GIT_USER}:${GIT_PASS}@${GIT_MANIFEST_REPO} ${MANIFEST_REPO}"
+                        sh "ls -l"
+                        }
+                    }
+                 }
             }
         }
 
-         stage("push changes to the manifest") {
+
+        // stage("Updating the manifest file") {
+        //     steps {
+        //         script {
+        //             echo "🚀 Update the image in the deployment manifest..."
+        //             sh """
+        //             pwd 
+        //             ls Stacknote-Manifest/
+        //             sed -i 's|image: ${IMAGE}:.*|image: ${DOCKER_IMAGE}|' ${MANIFEST_REPO}/${MANIFEST_REPO}/${MANIFEST_FILE_PATH}
+        //             """
+        //         }
+        //     }
+        // }
+
+        stage("push changes to the manifest") {
             steps {
                 script {
                     dir("${MANIFEST_REPO}") {
-                        withCredentials([usernamePassword(credentialsId: 'git-token', passwordVariable: 'GIT_PASS', usernameVariable: 'GIT_USER')]) {
+                        withCredentials([usernamePassword(credentialsId: 'Stacknote', passwordVariable: 'GIT_PASS', usernameVariable: 'GIT_USER')]) {
                             sh """
+                            
+                            echo "🚀 Update the image in the deployment manifest..."
+                            pwd 
+                            ls Stacknote-Manifest/
+                            sed -i 's|image: ${IMAGE}:.*|image: ${DOCKER_IMAGE}|' ${MANIFEST_REPO}/${MANIFEST_FILE_PATH}
+                            cd ${MANIFEST_REPO}
+                            ls -l
                             git config --global user.name "soklaymeng"
                             git config --global user.email "mengsoklay2222@gmail.com"
                             echo "🚀 Checking..."
-                            git branch
-                            ls -l 
+                            git branch 
                             pwd 
-                            echo "🚀 Start pushing to manifest repo"
-                            git add ${MANIFEST_FILE_PATH}
-                            git commit -m "update images to ${DOCKER_IMAGE}"
-                            git push https://${GIT_USER}:${GIT_PASS}@github.com/12-Generation-Advanced-Course-Project/Stacknote-Auth-Service
+                            echo "🚀 Start pushing to manifest repo"  
+                            git add .
+                            git commit -m "Update image to ${DOCKER_IMAGE}"
+                            git push https://${GIT_USER}:${GIT_PASS}@${GIT_MANIFEST_REPO}
                             """
                         }
                     }
                 }
             }
         }
+        
 
-        
-        
     }
 }
