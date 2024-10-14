@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        IMAGE = "soklay515/user-service"
+        IMAGE = "soklay515/auth-service"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_HUB_CREDENTIAL = "dockerhub-token"
         MANIFEST_REPO = "manifest-repo"
@@ -62,7 +62,7 @@ pipeline {
                 script {
                     echo "🚀 Update the image in the deployment manifest..."
                     sh """
-                    sed -i 's|image: soklay515/user-service.*|image: ${DOCKER_IMAGE}|' ${MANIFEST_REPO}/${MANIFEST_FILE_PATH}
+                    sed -i 's|image: soklay515/auth-service.*|image: ${DOCKER_IMAGE}|' ${MANIFEST_REPO}/${MANIFEST_FILE_PATH}
                     """
                 }
             }
