@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_HUB_CREDENTIAL = "dockerhub-token"
         MANIFEST_REPO = "manifest-repo"
-        GIT_MANIFEST_REPO = "https://github.com/12-Generation-Advanced-Course-Project/Stacknote-Manifest.git"
+        GIT_MANIFEST_REPO = "https://github.com/12-Generation-Advanced-Course-Project/Stacknote-Auth-Service.git"
         GIT_CREDENTIALS_ID = "git-token"
         MANIFEST_FILE_PATH = "manifest/deployment.yaml"
     }
@@ -83,7 +83,7 @@ pipeline {
                             echo "🚀 Start pushing to manifest repo"
                             git add ${MANIFEST_FILE_PATH}
                             git commit -m "update images to ${DOCKER_IMAGE}"
-                            git push https://${GIT_USER}:${GIT_PASS}@github.com/12-Generation-Advanced-Course-Project/Stacknote-Manifest.git
+                            git push https://${GIT_USER}:${GIT_PASS}@github.com/12-Generation-Advanced-Course-Project/Stacknote-Auth-Service
                             """
                         }
                     }
