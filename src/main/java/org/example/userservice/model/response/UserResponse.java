@@ -17,8 +17,8 @@ public class UserResponse {
     private String gender;
     private String dob;
     private String email;
-    private String createdAt;
-    private String updatedAt;
+    private String createdDate;
+    private String updatedDate;
     private String profile;
     private String bio;
 

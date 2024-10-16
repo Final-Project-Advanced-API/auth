@@ -56,8 +56,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
         user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
         user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
-        user.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
-        user.setUpdatedAt(userRepresentation.getAttributes().get("updatedAt").getFirst());
+        user.setCreatedDate(userRepresentation.getAttributes().get("createdDate").getFirst());
+        user.setUpdatedDate(userRepresentation.getAttributes().get("updatedDate").getFirst());
         return user;
     }
 
@@ -152,8 +152,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepresentation.setEmail(userRequest.getEmail());
         userRepresentation.singleAttribute("isForgot", String.valueOf(false));
         userRepresentation.singleAttribute("profile",userRequest.getProfile());
-        userRepresentation.singleAttribute("createdAt", String.valueOf(LocalDateTime.now()));
-        userRepresentation.singleAttribute("updatedAt", String.valueOf(LocalDateTime.now()));
+        userRepresentation.singleAttribute("createdDate", String.valueOf(LocalDateTime.now()));
+        userRepresentation.singleAttribute("updatedDate", String.valueOf(LocalDateTime.now()));
         userRepresentation.singleAttribute("issuedAt", String.valueOf(LocalDateTime.now()));
         userRepresentation.singleAttribute("expiredAt", String.valueOf(LocalDateTime.now().plusMinutes(1L)));
         String otp = generateOTP();
