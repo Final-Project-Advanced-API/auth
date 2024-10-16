@@ -65,10 +65,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public void verify(String email, String otpCode, Boolean type) {
         Optional<UserRepresentation> userRepresentationOpt = getUserByEmail(email);
         UsersResource userResource = keycloak.realm(realm).users();
-
         if (userRepresentationOpt.isPresent()) {
             UserRepresentation userRepresentation = userRepresentationOpt.get();
-
             String storedOtpCode = userRepresentation.firstAttribute("otpCode");
             if (storedOtpCode == null || !storedOtpCode.equals(otpCode)) {
                 throw new BadRequestException("Invalid OTP");

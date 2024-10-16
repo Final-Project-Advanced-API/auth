@@ -31,7 +31,7 @@ public class AuthenticationController {
         UserResponse user = authenticationService.registerUser(userRequest);
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .message("Register has been successfully.")
-                .code(200)
+                .code(201)
                 .payload(user)
                 .status(HttpStatus.CREATED)
                 .time(LocalDateTime.now())
