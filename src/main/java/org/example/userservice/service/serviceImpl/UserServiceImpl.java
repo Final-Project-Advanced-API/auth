@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
         user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
         user.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
-        user.setUpdateAt(userRepresentation.getAttributes().get("updateAt").getFirst());
+        user.setUpdatedAt(userRepresentation.getAttributes().get("updatedAt").getFirst());
         return user;
     }
 }

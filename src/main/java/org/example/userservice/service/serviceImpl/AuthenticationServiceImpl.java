@@ -57,7 +57,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
         user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
         user.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
-        user.setUpdateAt(userRepresentation.getAttributes().get("updateAt").getFirst());
+        user.setUpdatedAt(userRepresentation.getAttributes().get("updatedAt").getFirst());
         return user;
     }
 
@@ -153,7 +153,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         userRepresentation.singleAttribute("isForgot", String.valueOf(false));
         userRepresentation.singleAttribute("profile",userRequest.getProfile());
         userRepresentation.singleAttribute("createdAt", String.valueOf(LocalDateTime.now()));
-        userRepresentation.singleAttribute("updateAt", String.valueOf(LocalDateTime.now()));
+        userRepresentation.singleAttribute("updatedAt", String.valueOf(LocalDateTime.now()));
         userRepresentation.singleAttribute("issuedAt", String.valueOf(LocalDateTime.now()));
         userRepresentation.singleAttribute("expiredAt", String.valueOf(LocalDateTime.now().plusMinutes(1L)));
         String otp = generateOTP();

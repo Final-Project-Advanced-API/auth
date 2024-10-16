@@ -21,7 +21,7 @@ public class AppUser {
     private String profile;
     private String otpCode;
     private String createdAt;
-    private String updateAt;
+    private String updatedAt;
     private LocalDateTime issuedAt;
     private LocalDateTime expiredAt;
 
