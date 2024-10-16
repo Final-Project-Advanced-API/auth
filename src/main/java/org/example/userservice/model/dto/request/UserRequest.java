@@ -14,15 +14,20 @@ import lombok.*;
 public class UserRequest {
     @NotNull
     @NotBlank
-    private String userName;
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Username must contain only alphabetic characters.")
+    private String username;
 
     @NotNull
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "FullName must contain only alphabetic characters.")
     private String fullName;
 
-
     @NotNull
     @NotBlank
+    @Pattern(
+            regexp = "(?i)^(male|female|other)$",
+            message = "Please specify a valid gender (male, female, or other)"
+    )
     private String gender;
 
     @NotNull

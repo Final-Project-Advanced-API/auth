@@ -144,7 +144,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) throws MessagingException {
         UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(userRequest.getUserName());
+        userRepresentation.setUsername(userRequest.getUsername());
         userRepresentation.singleAttribute("gender", userRequest.getGender());
         userRepresentation.singleAttribute("dob", userRequest.getDob());
         userRepresentation.singleAttribute("fullName", userRequest.getFullName());
