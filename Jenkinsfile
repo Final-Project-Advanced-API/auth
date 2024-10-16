@@ -114,4 +114,17 @@ pipeline {
         
 
     }
+    post{
+        always{
+            script{
+                sh """
+                curl -s -X POST https://api.telegram.org/bot7997280208:AAHi1EBBIMt8TPMvyPRqFw45q9Ua9I9amCw/sendMessage \
+                    -d chat_id=-4542876022 \
+                    -d parse_mode="HTML" \
+                    -d text="<b>Stage</b>: Auth \
+                    %0A<b>Status</b>: Success"
+                """
+            }
+        }
+    }
 }
