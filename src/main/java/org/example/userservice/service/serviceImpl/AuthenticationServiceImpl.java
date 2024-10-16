@@ -36,31 +36,32 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.emailService = emailService;
         this.modelMapper = modelMapper;
     }
-
-    @Override
-    public UserResponse registerUser(UserRequest userRequest) throws MessagingException {
-        if (!userRequest.getConfirmPassword().equals(userRequest.getPassword())) {
-            throw new BadRequestException("Your confirm password does not match with your password");
-        }
-        UserRepresentation representation = prepareUserRepresentation(userRequest, preparePasswordRepresentation(userRequest.getPassword()));
-        UsersResource userResource = keycloak.realm(realm).users();
-        Response response = userResource.create(representation);
-        if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
-            throw new ConflictException("This email is already registered");
-        }
-        UserRepresentation userRepresentation = userResource.get(CreatedResponseUtil.getCreatedId(response)).toRepresentation();
-        emailService.sendMail(userRequest.getEmail(), userRepresentation.getAttributes().get("otpCode").getFirst());
-        UserResponse user = modelMapper.map(userRepresentation, UserResponse.class);
-        user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
-        user.setFullName(userRepresentation.getAttributes().get("fullName").getFirst());
-        user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
-        user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
-        user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
-        user.setCreatedDate(userRepresentation.getAttributes().get("createdDate").getFirst());
-        user.setUpdatedDate(userRepresentation.getAttributes().get("updatedDate").getFirst());
-        return user;
+@Override
+public UserResponse registerUser(UserRequest userRequest) throws MessagingException {
+    if (!userRequest.getConfirmPassword().equals(userRequest.getPassword())) {
+        throw new BadRequestException("Your confirm password does not match with your password");
     }
+    String username = extractUsernameFromEmail(userRequest.getEmail());
+    UserRepresentation representation = prepareUserRepresentation(userRequest, username, preparePasswordRepresentation(userRequest.getPassword()));
+    UsersResource userResource = keycloak.realm(realm).users();
+    Response response = userResource.create(representation);
 
+    if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
+        throw new ConflictException("This email is already registered");
+    }
+    UserRepresentation userRepresentation = userResource.get(CreatedResponseUtil.getCreatedId(response)).toRepresentation();
+    emailService.sendMail(userRequest.getEmail(), userRepresentation.getAttributes().get("otpCode").getFirst());
+
+    UserResponse user = modelMapper.map(userRepresentation, UserResponse.class);
+    user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
+    user.setFullName(userRepresentation.getAttributes().get("fullName").getFirst());
+    user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
+    user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
+    user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
+    user.setCreatedDate(userRepresentation.getAttributes().get("createdDate").getFirst());
+    user.setUpdatedDate(userRepresentation.getAttributes().get("updatedDate").getFirst());
+    return user;
+}
     @Override
     public void verify(String email, String otpCode, Boolean type) {
         Optional<UserRepresentation> userRepresentationOpt = getUserByEmail(email);
@@ -93,7 +94,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new BadRequestException("User not found");
         }
     }
-
     @Override
     public void resend(String email, Boolean type) throws MessagingException {
         Optional<UserRepresentation> userRepresentationOpt = getUserByEmail(email);
@@ -142,9 +142,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
     }
 
-    private UserRepresentation prepareUserRepresentation(UserRequest userRequest, CredentialRepresentation credentialRepresentation) throws MessagingException {
+    private UserRepresentation prepareUserRepresentation(UserRequest userRequest, String username, CredentialRepresentation credentialRepresentation) throws MessagingException {
         UserRepresentation userRepresentation = new UserRepresentation();
-        userRepresentation.setUsername(userRequest.getUsername());
+        userRepresentation.setUsername(username);
         userRepresentation.singleAttribute("gender", userRequest.getGender());
         userRepresentation.singleAttribute("dob", userRequest.getDob());
         userRepresentation.singleAttribute("fullName", userRequest.getFullName());
@@ -179,6 +179,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .searchByEmail(email, true)
                 .stream().findFirst()
                 .orElseThrow(() -> new NotFoundException("Your email is invalid")));
+    }
+    private String extractUsernameFromEmail(String email) {
+        // Assuming username is the part before the '@'
+        return email.substring(0, email.indexOf('@'));
     }
 
 

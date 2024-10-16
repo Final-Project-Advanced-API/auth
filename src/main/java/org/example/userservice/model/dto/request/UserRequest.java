@@ -12,10 +12,10 @@ import lombok.*;
 @Getter
 @Builder
 public class UserRequest {
-    @NotNull
-    @NotBlank
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "Username must contain only alphabetic characters.")
-    private String username;
+//    @NotNull
+//    @NotBlank
+//    @Pattern(regexp = "^[a-zA-Z]+$", message = "Username must contain only alphabetic characters.")
+//    private String username;
 
     @NotNull
     @NotBlank
