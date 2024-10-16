@@ -38,7 +38,9 @@ public class UserRequest {
 
     @NotNull
     @NotBlank
-    @Email
+    @Email(message = "Email should be valid")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@(gmail\\.com|yahoo\\.com|hotmail\\.com|outlook\\.com)$",
+            message = "Email must end with @gmail.com, @yahoo.com, @hotmail.com, or @outlook.com")
     private String email;
 
     @NotNull
@@ -53,11 +55,12 @@ public class UserRequest {
     private String confirmPassword;
     @NotNull
     @NotBlank
+    @Pattern(regexp = "(\\S+(\\.(?i)(jpg|png|gif|bmp))$)",
+            message = "profile must be contain file extension such as jpg, png, gif and bmp only"
+    )
     private String profile;
     @NotNull
     @NotBlank
     private String bio;
-
-
 
 }
