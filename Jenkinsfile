@@ -119,8 +119,8 @@ pipeline {
                 curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
                     -d chat_id=${TELEGRAM_CHAT_ID} \
                     -d parse_mode="HTML" \
-                    -d text="<b>Stage</b>: ✅ Authenticaation-Service \
-                    %0A<b>Status</b>: This authenticaation service was built successfully 🚀"
+                    -d text="<b>Stage</b>: ✅ Authentication-Service \
+                    %0A<b>Status</b>: This authentication service was built successfully 🚀"
                 """
             }
         }
@@ -132,8 +132,8 @@ pipeline {
                 curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
                     -d chat_id=${TELEGRAM_CHAT_ID} \
                     -d parse_mode="HTML" \
-                    -d text="<b>Stage</b>: ❌ Authenticaation-Service \
-                    %0A<b>Status</b>: This authenticaation service build failed 💥"
+                    -d text="<b>Stage</b>: ❌ Authentication-Service \
+                    %0A<b>Status</b>: This authentication service build failed 💥"
                 """
             }
         }
