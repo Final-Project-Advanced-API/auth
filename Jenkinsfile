@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE = "soklay515/user-service"
+        IMAGE = "soklay515/auth-service"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = 'dockerhub-token'
         GIT_MANIFEST_REPO = "github.com/12-Generation-Advanced-Course-Project/Stacknote-Manifest.git"
@@ -10,7 +10,7 @@ pipeline {
         MANIFEST_REPO = "Stacknote-Manifest"
         MANIFEST_FILE_PATH = "manifest/deployment.yaml"
         GIT_CREDENTIALS_ID = 'Stacknote'
-        ARGOCD_APP_NAME = 'user-service'
+        ARGOCD_APP_NAME = 'auth-service'
         ARGOCD_SERVER = 'https://163.47.8.124'
         ARGOCD_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJhZG1pbjphcGlLZXkiLCJuYmYiOjE3MjkxMjk0MTgsImlhdCI6MTcyOTEyOTQxOCwianRpIjoiYzI4YzE2NzctODQ4MC00NDYxLWEwYzAtNTU3NThiMGFlNmZhIn0.-BXA3rn_R4kRtCnl0UhClX1dAjPfeLG1nKZvyGdzg8s' // Make sure this token is on a single line
         TELEGRAM_BOT_TOKEN = '7997280208:AAHi1EBBIMt8TPMvyPRqFw45q9Ua9I9amCw'
