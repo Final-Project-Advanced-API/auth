@@ -20,8 +20,8 @@ public class AppUser {
     private String email;
     private String profile;
     private String otpCode;
-    private String createdAt;
-    private String updatedAt;
+    private String createdDate;
+    private String updatedDate;
     private LocalDateTime issuedAt;
     private LocalDateTime expiredAt;
 

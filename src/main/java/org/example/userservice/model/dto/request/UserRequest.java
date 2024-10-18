@@ -12,17 +12,22 @@ import lombok.*;
 @Getter
 @Builder
 public class UserRequest {
-    @NotNull
-    @NotBlank
-    private String userName;
+//    @NotNull
+//    @NotBlank
+//    @Pattern(regexp = "^[a-zA-Z]+$", message = "Username must contain only alphabetic characters.")
+//    private String username;
 
     @NotNull
     @NotBlank
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "FullName must contain only alphabetic characters.")
     private String fullName;
 
-
     @NotNull
     @NotBlank
+    @Pattern(
+            regexp = "(?i)^(male|female|other)$",
+            message = "Please specify a valid gender (male, female, or other)"
+    )
     private String gender;
 
     @NotNull
@@ -33,7 +38,9 @@ public class UserRequest {
 
     @NotNull
     @NotBlank
-    @Email
+    @Email(message = "Email should be valid")
+    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@(gmail\\.com|yahoo\\.com|hotmail\\.com|outlook\\.com)$",
+            message = "Email must end with @gmail.com, @yahoo.com, @hotmail.com, or @outlook.com")
     private String email;
 
     @NotNull
@@ -48,11 +55,12 @@ public class UserRequest {
     private String confirmPassword;
     @NotNull
     @NotBlank
+    @Pattern(regexp = "(\\S+(\\.(?i)(jpg|png|gif|bmp))$)",
+            message = "profile must be contain file extension such as jpg, png, gif and bmp only"
+    )
     private String profile;
     @NotNull
     @NotBlank
     private String bio;
-
-
 
 }

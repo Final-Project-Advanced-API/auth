@@ -89,8 +89,8 @@ public class UserServiceImpl implements UserService {
         user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
         user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
         user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
-        user.setCreatedAt(userRepresentation.getAttributes().get("createdAt").getFirst());
-        user.setUpdatedAt(userRepresentation.getAttributes().get("updatedAt").getFirst());
+        user.setCreatedDate(userRepresentation.getAttributes().get("createdDate").getFirst());
+        user.setUpdatedDate(userRepresentation.getAttributes().get("updatedDate").getFirst());
         return user;
     }
 }
