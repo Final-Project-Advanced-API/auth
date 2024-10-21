@@ -39,10 +39,9 @@ public class UserRequest {
     @NotNull
     @NotBlank
     @Email
-//    @Pattern(regexp = "^[A-Za-z0-9._%+-]+@(gmail\\.com|yahoo\\.com|hotmail\\.com|outlook\\.com)$",
-//            message = "Email must end with @gmail.com, @yahoo.com, @hotmail.com, or @outlook.com")
-    @Pattern(regexp = "^[\\w.%+-]+@[\\w-]{1,5}\\.[a-zA-Z]{1,5}$", message = "Email must follow the format: user@1-5chars.1-5chars")
+    @Pattern(regexp = "^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "Email must follow the format: user@domain.com")
     private String email;
+
     @NotNull
     @NotBlank
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$",
@@ -52,12 +51,14 @@ public class UserRequest {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$",
             message = "Password must be at least 8 characters long and include both letters and numbers"
     )
+
     private String confirmPassword;
     @NotNull
     @NotBlank
     @Pattern(regexp = "(\\S+(\\.(?i)(jpg|png|gif|bmp))$)",
             message = "profile must be contain file extension such as jpg, png, gif and bmp only"
     )
+
     private String profile;
     @NotNull
     @NotBlank
