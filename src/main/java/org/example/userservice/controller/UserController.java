@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.userservice.model.dto.request.CurrentUserRequest;
 import org.example.userservice.model.dto.request.PasswordRequest;
+import org.example.userservice.model.dto.request.UpdatePasswordRequest;
 import org.example.userservice.model.response.UserResponse;
 import org.example.userservice.service.UserService;
 import org.example.userservice.util.APIResponse;
@@ -65,8 +66,8 @@ public class UserController {
     }
     @PutMapping("/{password}")
     @Operation(summary = "Update password")
-    ResponseEntity<?> changePassword(Principal principal, @RequestBody @Valid PasswordRequest passwordRequest) {
-        userService.changePassword(principal.getName(),passwordRequest);
+    ResponseEntity<?> changePassword(Principal principal, @RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
+        userService.changePassword(principal.getName(),updatePasswordRequest);
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
                 .message("Change password current user successfully.")
                 .code(200)

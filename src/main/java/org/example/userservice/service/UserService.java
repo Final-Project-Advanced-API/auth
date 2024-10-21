@@ -13,6 +13,7 @@ public interface UserService {
     UserResponse getCurrentUser(String name);
     UserResponse getUserByEmail(String email);
     UserResponse getUserById(UUID userId);
-    void changePassword(String name, PasswordRequest passwordRequest);
+//    void changePassword(String name, PasswordRequest passwordRequest);
+    void changePassword(String id, UpdatePasswordRequest updatePasswordRequest);
     UserResponse updateCurrentUser(String id , CurrentUserRequest userRequest);
 }

@@ -3,8 +3,7 @@ package org.example.userservice.service.serviceImpl;
 import org.example.userservice.exception.BadRequestException;
 import org.example.userservice.exception.NotFoundException;
 import org.example.userservice.model.dto.request.CurrentUserRequest;
-import org.example.userservice.model.dto.request.PasswordRequest;
-import org.example.userservice.model.dto.request.UserRequest;
+import org.example.userservice.model.dto.request.UpdatePasswordRequest;
 import org.example.userservice.model.response.UserResponse;
 import org.example.userservice.service.UserService;
 import org.keycloak.admin.client.Keycloak;
@@ -13,8 +12,11 @@ import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +29,7 @@ public class UserServiceImpl implements UserService {
         this.keycloak = keycloak;
         this.modelMapper = modelMapper;
     }
+
     @Value("${keycloak.realm}")
     private String realm;
 
@@ -45,43 +48,46 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException("User not found");
         }
     }
-
     @Override
     public UserResponse getUserById(UUID userId) {
         UsersResource usersResource = keycloak.realm(realm).users();
         UserRepresentation userRepresentation = usersResource.get(String.valueOf(userId)).toRepresentation();
-        if (userRepresentation == null){
+        if (userRepresentation == null) {
             throw new NotFoundException("User not found");
         }
         return getUser(userRepresentation);
-
     }
 
     @Override
-    public void changePassword(String id, PasswordRequest passwordRequest) {
-        if (!passwordRequest.getConfirmPassword().equals(passwordRequest.getPassword())){
+    public void changePassword(String id, UpdatePasswordRequest updatePasswordRequest) {
+        boolean isOldPasswordCorrect = validateOldPassword(id, updatePasswordRequest.getOldPassword());
+        if (!isOldPasswordCorrect) {
+            throw new BadRequestException("Old password is incorrect");
+        }
+        if (!updatePasswordRequest.getConfirmPassword().equals(updatePasswordRequest.getPassword())) {
             throw new BadRequestException("Your confirmPassword does not match with your password");
         }
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
         credentialRepresentation.setTemporary(false);
         credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-        credentialRepresentation.setValue(passwordRequest.getPassword());
+        credentialRepresentation.setValue(updatePasswordRequest.getPassword());
         UsersResource userResource = keycloak.realm(realm).users();
         userResource.get(id).resetPassword(credentialRepresentation);
     }
 
     @Override
     public UserResponse updateCurrentUser(String id, CurrentUserRequest userRequest) {
-         UserRepresentation userRepresentation = keycloak.realm(realm).users().get(id).toRepresentation();
-         userRepresentation.singleAttribute("fullName",userRequest.getFullName());
-         userRepresentation.singleAttribute("dob", userRequest.getDob());
-         userRepresentation.singleAttribute("gender",userRequest.getGender());
-         userRepresentation.singleAttribute("profile",userRequest.getProfile());
-         userRepresentation.singleAttribute("bio",userRequest.getBio());
-         UsersResource usersResource = keycloak.realm(realm).users();
-         usersResource.get(id).update(userRepresentation);
-         return getUser(userRepresentation);
+        UserRepresentation userRepresentation = keycloak.realm(realm).users().get(id).toRepresentation();
+        userRepresentation.singleAttribute("fullName", userRequest.getFullName());
+        userRepresentation.singleAttribute("dob", userRequest.getDob());
+        userRepresentation.singleAttribute("gender", userRequest.getGender());
+        userRepresentation.singleAttribute("profile", userRequest.getProfile());
+        userRepresentation.singleAttribute("bio", userRequest.getBio());
+        UsersResource usersResource = keycloak.realm(realm).users();
+        usersResource.get(id).update(userRepresentation);
+        return getUser(userRepresentation);
     }
+
     private UserResponse getUser(UserRepresentation userRepresentation) {
         UserResponse user = modelMapper.map(userRepresentation, UserResponse.class);
         user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
@@ -93,4 +99,29 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedDate(userRepresentation.getAttributes().get("updatedDate").getFirst());
         return user;
     }
+
+    private boolean validateOldPassword(String userId, String oldPassword) {
+        String clientId = "stack-notes-client";
+        String clientSecret = "tDbzKXKsHvvmFQAJ1bUSR87Dbia2ssfZ";
+        String realmUrl = "https://keycloak.jelay.site/realms/stack-notes/protocol/openid-connect/token";
+        UserRepresentation userRepresentation = keycloak.realm(realm).users().get(userId).toRepresentation();
+        String username = userRepresentation.getUsername();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("client_id", clientId);
+        body.add("client_secret", clientSecret);
+        body.add("grant_type", "password");
+        body.add("username", username);
+        body.add("password", oldPassword);
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(realmUrl, HttpMethod.POST, request, String.class);
+            return response.getStatusCode() == HttpStatus.OK;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }
