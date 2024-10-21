@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE = "soklay515/auth-service"
+        IMAGE = "soklay515/user-service"
         DOCKER_IMAGE = "${IMAGE}:${BUILD_NUMBER}"
         DOCKER_CREDENTIALS_ID = 'dockerhub-token'
         GIT_MANIFEST_REPO = "github.com/12-Generation-Advanced-Course-Project/Stacknote-Manifest.git"
