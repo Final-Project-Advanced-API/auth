@@ -14,7 +14,7 @@ pipeline {
         ARGOCD_SERVER = 'https://163.47.8.124'
         ARGOCD_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcmdvY2QiLCJzdWIiOiJhZG1pbjphcGlLZXkiLCJuYmYiOjE3MjkxMjk0MTgsImlhdCI6MTcyOTEyOTQxOCwianRpIjoiYzI4YzE2NzctODQ4MC00NDYxLWEwYzAtNTU3NThiMGFlNmZhIn0.-BXA3rn_R4kRtCnl0UhClX1dAjPfeLG1nKZvyGdzg8s' // Make sure this token is on a single line
         TELEGRAM_BOT_TOKEN = '7997280208:AAHi1EBBIMt8TPMvyPRqFw45q9Ua9I9amCw'
-        TELEGRAM_CHAT_ID = '-4542876022'
+        TELEGRAM_CHAT_ID = '-1002458427919'
     }
 
     stages {
@@ -119,8 +119,8 @@ pipeline {
                 curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
                     -d chat_id=${TELEGRAM_CHAT_ID} \
                     -d parse_mode="HTML" \
-                    -d text="<b>Stage</b>: ✅ Tag-Service \
-                    %0A<b>Status</b>: This tag service was built successfully 🚀"
+                    -d text="<b>Stage</b>: ✅ Authentication-Service \
+                    %0A<b>Status</b>: This authentication service was built successfully 🚀"
                 """
             }
         }
@@ -132,8 +132,8 @@ pipeline {
                 curl -s -X POST https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage \
                     -d chat_id=${TELEGRAM_CHAT_ID} \
                     -d parse_mode="HTML" \
-                    -d text="<b>Stage</b>: ❌ Tag-Service \
-                    %0A<b>Status</b>: This tag service build failed 💥"
+                    -d text="<b>Stage</b>: ❌ Authentication-Service \
+                    %0A<b>Status</b>: This authentication service build failed 💥"
                 """
             }
         }
