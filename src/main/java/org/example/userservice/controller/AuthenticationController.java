@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
 
 @RestController
 @CrossOrigin
-//@SecurityRequirement(name = "user")
 @RequestMapping("/api/v1/authentication")
 public class AuthenticationController {
     private final AuthenticationService authenticationService;

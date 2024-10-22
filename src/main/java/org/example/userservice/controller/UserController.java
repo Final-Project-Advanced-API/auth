@@ -19,12 +19,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
+@CrossOrigin
 @AllArgsConstructor
 @RequestMapping("api/v1/users")
 @SecurityRequirement(name = "stack-notes")
 public class UserController {
     private final UserService userService;
-
     @GetMapping("/user-profile")
     @Operation(summary = "User profile")
     public ResponseEntity<APIResponse<UserResponse>> getCurrentUser(Principal principal) {
