@@ -157,7 +157,7 @@ pipeline {
                  emailext (
                     to: "${EMAIL_RECIPIENTS}",
                     subject: "Build Success: ${env.JOB_NAME} - Build #${env.BUILD_NUMBER}",
-                    body: "<b>Stage</b>: ❌ Authentication-Service \<br>
+                    body: "<b>Stage</b>: ❌ Authentication-Service \
                            %0A<b>Status</b>: ThisAuthentication-Service build failed 💥",
                     mimeType: 'text/html'
                 )
