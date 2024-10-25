@@ -17,8 +17,6 @@ spring:
       resource server:
         jwt:
           issuer-uri: https://keycloak.jelay.site/realms/stack-notes
-#          jwk-set-uri: http://localhost:8080/realms/user/protocol/openid-connect/certs
-#          jwk-set-uri: http://localhost:8080/realms/myauth/protocol/openid-connect/certs
 # Keycloak configuration
 keycloak:
   realm: stack-notes
