@@ -65,7 +65,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
     @PutMapping("/{password}")
-    @Operation(summary = "Update password")
+    @Operation(summary = "Reset password")
     ResponseEntity<?> changePassword(Principal principal, @RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
         userService.changePassword(principal.getName(),updatePasswordRequest);
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()

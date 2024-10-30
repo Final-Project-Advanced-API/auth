@@ -1,5 +1,6 @@
 package org.example.userservice.model.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -17,6 +18,7 @@ public class PasswordRequest {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$",
             message = "password must be at least 8 characters long and include both letters and numbers"
     )
+    @Schema(example = "*****")
     private String password;
 
     @NotNull
@@ -24,5 +26,6 @@ public class PasswordRequest {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$",
             message = "confirm password must be at least 8 characters long and include both letters and numbers"
     )
+    @Schema(example = "*****")
     private String confirmPassword;
 }

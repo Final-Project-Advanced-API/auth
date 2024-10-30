@@ -60,17 +60,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String id, UpdatePasswordRequest updatePasswordRequest) {
-        boolean isOldPasswordCorrect = validateOldPassword(id, updatePasswordRequest.getOldPassword());
+        boolean isOldPasswordCorrect = validateOldPassword(id, updatePasswordRequest.getCurrentPassword());
         if (!isOldPasswordCorrect) {
             throw new BadRequestException("Old password is incorrect");
         }
-        if (!updatePasswordRequest.getConfirmPassword().equals(updatePasswordRequest.getPassword())) {
+        if (!updatePasswordRequest.getConfirmPassword().equals(updatePasswordRequest.getNewPassword())) {
             throw new BadRequestException("Your confirmPassword does not match with your password");
         }
         CredentialRepresentation credentialRepresentation = new CredentialRepresentation();
         credentialRepresentation.setTemporary(false);
         credentialRepresentation.setType(CredentialRepresentation.PASSWORD);
-        credentialRepresentation.setValue(updatePasswordRequest.getPassword());
+        credentialRepresentation.setValue(updatePasswordRequest.getNewPassword());
         UsersResource userResource = keycloak.realm(realm).users();
         userResource.get(id).resetPassword(credentialRepresentation);
     }
