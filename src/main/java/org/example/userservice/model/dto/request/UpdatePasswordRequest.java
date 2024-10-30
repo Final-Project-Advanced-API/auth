@@ -16,7 +16,7 @@ public class UpdatePasswordRequest {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$",
             message = "password must be at least 8 characters long and include both letters and numbers"
     )
-    private String oldPassword;
+    private String currentPa;
 
     @NotNull
     @NotBlank
