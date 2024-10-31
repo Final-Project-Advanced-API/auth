@@ -1,10 +1,7 @@
 package org.example.userservice.model.dto.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -31,11 +28,7 @@ public class UserRequest {
 
     @NotNull
     @NotBlank
-    @Pattern(
-            regexp = "^(19[0-9]{2}|20[0-2][0-9]|2030)-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
-            message = "Date of Birth must be in the format YYYY-MM-DD and range from 1900-01-01 to 2030-12-31."
-    )
-    @Schema(example = "2000-05-30")
+
     private String dob;
 
     @NotNull

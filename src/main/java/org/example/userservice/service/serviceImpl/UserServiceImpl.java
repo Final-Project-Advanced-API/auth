@@ -17,6 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -78,6 +82,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse updateCurrentUser(String id, CurrentUserRequest userRequest) {
         UserRepresentation userRepresentation = keycloak.realm(realm).users().get(id).toRepresentation();
+        LocalDate dob;
+        try {
+            dob = LocalDate.parse(userRequest.getDob(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            if (dob.isAfter(LocalDate.now())) {
+                throw new BadRequestException("Date of birth cannot be in the future");
+            }
+        } catch (DateTimeParseException e) {
+            throw new BadRequestException("Invalid date format for date of birth, expected format is yyyy-MM-dd");
+        }
         userRepresentation.singleAttribute("fullName", userRequest.getFullName());
         userRepresentation.singleAttribute("dob", userRequest.getDob());
         userRepresentation.singleAttribute("gender", userRequest.getGender());
@@ -90,8 +103,6 @@ public class UserServiceImpl implements UserService {
 
     private UserResponse getUser(UserRepresentation userRepresentation) {
         UserResponse user = modelMapper.map(userRepresentation, UserResponse.class);
-
-        // Check and set optional user attributes with null safety
         user.setGender(getFirstAttribute(userRepresentation, "gender"));
         user.setFullName(getFirstAttribute(userRepresentation, "fullName"));
         user.setDob(getFirstAttribute(userRepresentation, "dob"));

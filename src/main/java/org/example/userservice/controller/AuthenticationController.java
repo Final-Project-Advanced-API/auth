@@ -25,6 +25,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Register with your information")
     public ResponseEntity<?> register(@RequestBody @Valid UserRequest userRequest) throws MessagingException {
         UserResponse user = authenticationService.registerUser(userRequest);
@@ -51,12 +52,13 @@ public class AuthenticationController {
         return ResponseEntity.ok(response);
     }
     @PostMapping("/resendOtp")
+    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "resent otp")
     public ResponseEntity<?> resendOtp(@RequestParam String email, @RequestParam(defaultValue = "false") Boolean type) throws MessagingException {
         authenticationService.resend(email, type);
         APIResponse<?> response = APIResponse.builder()
                .message("Otp has been sent successfully.")
-                .code(200)
+                .code(201)
                .status(HttpStatus.OK)
                .time(LocalDateTime.now())
                .build();

@@ -18,7 +18,11 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @Service
@@ -40,6 +44,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 public UserResponse registerUser(UserRequest userRequest) throws MessagingException {
     if (!userRequest.getConfirmPassword().equals(userRequest.getPassword())) {
         throw new BadRequestException("Your confirm password does not match with your password");
+    }
+    LocalDate dob;
+    try {
+        dob = LocalDate.parse(userRequest.getDob(), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        if (dob.isAfter(LocalDate.now())) {
+            throw new BadRequestException("Date of birth cannot be in the future");
+        }
+    } catch (DateTimeParseException e) {
+        throw new BadRequestException("Invalid date format for date of birth, expected format is yyyy-MM-dd");
     }
     String username = extractUsernameFromEmail(userRequest.getEmail());
     UserRepresentation representation = prepareUserRepresentation(userRequest, username, preparePasswordRepresentation(userRequest.getPassword()));
