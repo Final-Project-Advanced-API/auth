@@ -60,9 +60,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(String id, UpdatePasswordRequest updatePasswordRequest) {
-        boolean isOldPasswordCorrect = validateOldPassword(id, updatePasswordRequest.getCurrentPassword());
-        if (!isOldPasswordCorrect) {
-            throw new BadRequestException("Old password is incorrect");
+        boolean isCurrentPasswordCorrect = validateCurrentPassword(id, updatePasswordRequest.getCurrentPassword());
+        if (!isCurrentPasswordCorrect) {
+            throw new BadRequestException("Your current password is incorrect");
         }
         if (!updatePasswordRequest.getConfirmPassword().equals(updatePasswordRequest.getNewPassword())) {
             throw new BadRequestException("Your confirmPassword does not match with your password");
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private boolean validateOldPassword(String userId, String oldPassword) {
+    private boolean validateCurrentPassword(String userId, String currentPassword) {
         String clientId = "stack-notes-client";
         String clientSecret = "tDbzKXKsHvvmFQAJ1bUSR87Dbia2ssfZ";
         String realmUrl = "https://keycloak.jelay.site/realms/stack-notes/protocol/openid-connect/token";
@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService {
         body.add("client_secret", clientSecret);
         body.add("grant_type", "password");
         body.add("username", username);
-        body.add("password", oldPassword);
+        body.add("password", currentPassword);
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
         RestTemplate restTemplate = new RestTemplate();
         try {
