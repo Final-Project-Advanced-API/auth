@@ -90,13 +90,16 @@ public class UserServiceImpl implements UserService {
 
     private UserResponse getUser(UserRepresentation userRepresentation) {
         UserResponse user = modelMapper.map(userRepresentation, UserResponse.class);
-        user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
-        user.setFullName(userRepresentation.getAttributes().get("fullName").getFirst());
-        user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
-        user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
-        user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
-        user.setCreatedDate(userRepresentation.getAttributes().get("createdDate").getFirst());
-        user.setUpdatedDate(userRepresentation.getAttributes().get("updatedDate").getFirst());
+
+        // Check and set optional user attributes with null safety
+        user.setGender(getFirstAttribute(userRepresentation, "gender"));
+        user.setFullName(getFirstAttribute(userRepresentation, "fullName"));
+        user.setDob(getFirstAttribute(userRepresentation, "dob"));
+        user.setBio(getFirstAttribute(userRepresentation, "bio"));
+        user.setProfile(getFirstAttribute(userRepresentation, "profile"));
+        user.setCreatedDate(getFirstAttribute(userRepresentation, "createdDate"));
+        user.setUpdatedDate(getFirstAttribute(userRepresentation, "updatedDate"));
+
         return user;
     }
 
@@ -122,6 +125,11 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return false;
         }
+    }
+    private String getFirstAttribute(UserRepresentation userRepresentation, String attributeName) {
+        return userRepresentation.getAttributes() != null && userRepresentation.getAttributes().get(attributeName) != null
+                ? userRepresentation.getAttributes().get(attributeName).isEmpty() ? null : userRepresentation.getAttributes().get(attributeName).getFirst()
+                : null;
     }
 
 }

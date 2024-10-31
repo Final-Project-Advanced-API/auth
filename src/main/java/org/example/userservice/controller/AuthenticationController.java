@@ -29,7 +29,7 @@ public class AuthenticationController {
     public ResponseEntity<?> register(@RequestBody @Valid UserRequest userRequest) throws MessagingException {
         UserResponse user = authenticationService.registerUser(userRequest);
         APIResponse<UserResponse> response = APIResponse.<UserResponse>builder()
-                .message("Register has been successfully.")
+                .message("You've registered successfully.")
                 .code(201)
                 .payload(user)
                 .status(HttpStatus.CREATED)

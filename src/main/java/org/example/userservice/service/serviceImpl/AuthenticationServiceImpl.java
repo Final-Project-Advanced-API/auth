@@ -56,8 +56,8 @@ public UserResponse registerUser(UserRequest userRequest) throws MessagingExcept
     user.setGender(userRepresentation.getAttributes().get("gender").getFirst());
     user.setFullName(userRepresentation.getAttributes().get("fullName").getFirst());
     user.setDob(userRepresentation.getAttributes().get("dob").getFirst());
-    user.setBio(userRepresentation.getAttributes().get("bio").getFirst());
-    user.setProfile(userRepresentation.getAttributes().get("profile").getFirst());
+    user.setBio(null);
+    user.setProfile(null);
     user.setCreatedDate(userRepresentation.getAttributes().get("createdDate").getFirst());
     user.setUpdatedDate(userRepresentation.getAttributes().get("updatedDate").getFirst());
     return user;
@@ -148,10 +148,8 @@ public UserResponse registerUser(UserRequest userRequest) throws MessagingExcept
         userRepresentation.singleAttribute("gender", userRequest.getGender());
         userRepresentation.singleAttribute("dob", userRequest.getDob());
         userRepresentation.singleAttribute("fullName", userRequest.getFullName());
-        userRepresentation.singleAttribute("bio", userRequest.getBio());
         userRepresentation.setEmail(userRequest.getEmail());
         userRepresentation.singleAttribute("isForgot", String.valueOf(false));
-        userRepresentation.singleAttribute("profile",userRequest.getProfile());
         userRepresentation.singleAttribute("createdDate", String.valueOf(LocalDateTime.now()));
         userRepresentation.singleAttribute("updatedDate", String.valueOf(LocalDateTime.now()));
         userRepresentation.singleAttribute("issuedAt", String.valueOf(LocalDateTime.now()));
