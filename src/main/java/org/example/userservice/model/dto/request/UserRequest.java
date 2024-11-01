@@ -28,7 +28,7 @@ public class UserRequest {
 
     @NotNull
     @NotBlank
-
+    @Schema(example = "2000-05-12")
     private String dob;
 
     @NotNull

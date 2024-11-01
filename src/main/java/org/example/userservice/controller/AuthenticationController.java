@@ -39,7 +39,7 @@ public class AuthenticationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @GetMapping("/verify")
+    @PutMapping("/verify")
     @Operation(summary = "Verify otp")
     public ResponseEntity<?> verify(@RequestParam @Email String email, @RequestParam(defaultValue = "false") Boolean type,@RequestParam String otpCode) {
         authenticationService.verify(email ,otpCode, type);
