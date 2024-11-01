@@ -1,73 +1,121 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>OTP Email</title>
+    <title>Notification Email</title>
     <style>
-        /* Inline CSS styles */
         body {
-            background-color: #f0f4f8;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #e5effa, #f9fcff);
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
         }
-
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
+        .email-container {
+            max-width: 420px;
             background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 30px 20px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            color: #344054;
+        }
+        .email-header {
+            background: linear-gradient(135deg, #6a92cb, #f8fbff);
+            text-align: center;
+            color: #ffffff;
+            padding: 20px 0;
+            border-bottom: 4px solid #c5d4e4;
+        }
+        .email-header img {
+            width: 200px;
+        }
+        .email-content {
+            padding: 30px;
+            text-align: left;
+            color: #007AFF;
+        }
+        .greeting {
+            font-size: 20px;
+            font-weight: bold;
+            color: #344054;
+            margin-bottom: 15px;
+        }
+        .message-box {
+            background: linear-gradient(135deg, #f8fbff, #e8eff5);
+            border-left: 5px solid #6a92cb;
+            padding: 20px;
+            border-radius: 16px;
+            line-height: 1.6;
+            margin: 20px 0;
+            font-size: 16px;
+            color: #344054;
             text-align: center;
         }
-
-        .logo {
-            width: 100px;
-            margin-bottom: 20px;
-        }
-
         .otp-code {
-            background-color: #3D7EDF;
-            color: #ffffff;
-            font-size: 24px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        .otp-digit {
             font-weight: bold;
-            padding: 15px 25px;
-            border-radius: 6px;
-            margin-top: 20px;
+            font-size: 22px;
+            color: #344054;
+            background: #f8f9fa;
+            padding: 12px;
+            width: 36px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            border: 2px solid #c5d4e4;
         }
-
         .note {
-            color: #6b7280;
-            margin-top: 20px;
+            color: #98A2B3;
             font-size: 14px;
+            margin-top: 25px;
+            text-align: center;
         }
-
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
+        .email-footer {
+            padding: 18px;
+            text-align: center;
+            font-size: 13px;
+            color: #98A2B3;
+            background-color: #f3f4f6;
+            border-top: 1px solid #e2e8f0;
         }
-
-        p {
-            color: #555;
-            margin-bottom: 10px;
+        a {
+            color: #007AFF;
+            text-decoration: none;
         }
     </style>
 </head>
-
 <body>
-<div class="container">
-    <img src="https://bugzapper-bucket.s3.ap-southeast-2.amazonaws.com/bug-logo.png" alt="logo"
-         class="logo" />
-    <h1>Welcome to BugZapper</h1>
-    <p>Your One-Time Password (OTP) is :</p>
-    <div class="otp-code" th:text="${otp}">123456</div>
-    <p class="note">Don't share this OTP with anyone.</p>
+<div class="email-container">
+    <div class="email-header">
+        <img src="https://stacknotes.s3.ap-southeast-2.amazonaws.com/ac68bcbc-4458-4dec-acbe-1554f8310bb8.png" alt="Logo">
+    </div>
+    <div class="email-content">
+        <p class="greeting">Your Verification Code</p>
+        <div class="message-box">
+            <div class="otp-code">
+                <!-- Render each digit separately for a clear, structured look -->
+                <span class="otp-digit" th:text="${otp[0]}">1</span>
+                <span class="otp-digit" th:text="${otp[1]}">2</span>
+                <span class="otp-digit" th:text="${otp[2]}">3</span>
+                <span class="otp-digit" th:text="${otp[3]}">4</span>
+                <span class="otp-digit" th:text="${otp[4]}">5</span>
+                <span class="otp-digit" th:text="${otp[5]}">6</span>
+            </div>
+        </div>
+        <p class="note">If you have any questions, feel free to <a href="mailto:support@stacknotes.com">contact our support team</a>.</p>
+    </div>
+    <div class="email-footer">
+        &copy; 2024 StackNotes. All rights reserved.
+    </div>
 </div>
 </body>
 </html>
