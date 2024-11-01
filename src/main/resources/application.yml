@@ -1,45 +1,5 @@
-server:
-  port: 8081
 spring:
   application:
     name: user-service
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: bugzapper.hrd@gmail.com
-    password: dbblamycivtocqki
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
-  #Resource server configuration
-  security:
-    oauth2:
-      resource server:
-        jwt:
-          issuer-uri: https://keycloak.jelay.site/realms/stack-notes
-# Keycloak configuration
-keycloak:
-  realm: stack-notes
-  resource: stack-notes-client
-  auth-server-url: https://keycloak.jelay.site/
-  credentials:
-    secret: tDbzKXKsHvvmFQAJ1bUSR87Dbia2ssfZ
-    client-id: stack-notes-client
-    provider: secret
-# Swagger configuration
-springdoc:
-  swagger-ui:
-    oauth:
-      client-id: stack-notes-client
-      client-secret: tDbzKXKsHvvmFQAJ1bUSR87Dbia2ssfZ
-      realm: stack-notes
-    tags-sorter: alpha
-# Eureka configuration
-eureka:
-  client:
-    service-url:
-      defaultZone: https://eureka.jelay.site/eureka
-    register-with-eureka: true
-    fetch-registry: true
-  instance:
-    prefer-ip-address: true
+  config:
+    import: optional:configserver:http://165.22.244.160:9099/
