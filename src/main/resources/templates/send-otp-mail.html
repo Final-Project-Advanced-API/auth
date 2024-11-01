@@ -20,6 +20,8 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             color: #344054;
+            margin: 20px;
+            width: 100%;
         }
         .email-header {
             background: linear-gradient(135deg, #6a92cb, #f8fbff);
@@ -30,6 +32,7 @@
         }
         .email-header img {
             width: 200px;
+            max-width: 100%;
         }
         .email-content {
             padding: 30px;
@@ -61,10 +64,10 @@
         }
         .otp-digit {
             font-weight: bold;
-            font-size: 22px;
+            font-size: 24px;
             color: #344054;
             background: #f8f9fa;
-            padding: 12px;
+            padding: 15px;
             width: 36px;
             height: 40px;
             display: flex;
@@ -90,6 +93,38 @@
         a {
             color: #007AFF;
             text-decoration: none;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .email-content {
+                padding: 20px;
+            }
+            .otp-digit {
+                width: 30px;
+                height: 35px;
+                font-size: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .email-content {
+                padding: 15px;
+            }
+            .greeting {
+                font-size: 18px;
+            }
+            .otp-code {
+                gap: 6px;
+            }
+            .otp-digit {
+                width: 28px;
+                height: 30px;
+                font-size: 18px;
+            }
+            .note {
+                font-size: 12px;
+            }
         }
     </style>
 </head>
