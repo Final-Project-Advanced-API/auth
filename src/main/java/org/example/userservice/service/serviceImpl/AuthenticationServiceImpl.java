@@ -192,7 +192,6 @@ public UserResponse registerUser(UserRequest userRequest) throws MessagingExcept
                 .orElseThrow(() -> new NotFoundException("Your email is invalid")));
     }
     private String extractUsernameFromEmail(String email) {
-        // Assuming username is the part before the '@'
         return email.substring(0, email.indexOf('@'));
     }
 

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.example.userservice.model.dto.request.CurrentUserRequest;
-import org.example.userservice.model.dto.request.PasswordRequest;
+
 import org.example.userservice.model.dto.request.UpdatePasswordRequest;
 import org.example.userservice.model.response.UserResponse;
 import org.example.userservice.service.UserService;
@@ -22,9 +22,10 @@ import java.util.UUID;
 @CrossOrigin
 @AllArgsConstructor
 @RequestMapping("api/v1/users")
-@SecurityRequirement(name = "stack-notes")
+
 public class UserController {
     private final UserService userService;
+    @SecurityRequirement(name = "stack-notes")
     @GetMapping("/user-profile")
     @Operation(summary = "User profile")
     public ResponseEntity<APIResponse<UserResponse>> getCurrentUser(Principal principal) {
@@ -64,6 +65,7 @@ public class UserController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+    @SecurityRequirement(name = "stack-notes")
     @PutMapping("/{password}")
     @Operation(summary = "Reset password")
     ResponseEntity<?> changePassword(Principal principal, @RequestBody @Valid UpdatePasswordRequest updatePasswordRequest) {
@@ -77,6 +79,7 @@ public class UserController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+    @SecurityRequirement(name = "stack-notes")
     @PutMapping
     @Operation(summary = "Update current user")
     ResponseEntity<?> updateUser(Principal principal, @RequestBody @Valid CurrentUserRequest userRequest) {
